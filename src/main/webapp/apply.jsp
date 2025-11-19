@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Online Recruitment Form</title>
+    <title>Raghu Sukdik Form</title>
 </head>
 <body>
     <h1>Hello welcome to SE lab.</h1>

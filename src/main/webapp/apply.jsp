@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Raghu Sukass Form</title>
+    <title>Raghu Sukmom Form</title>
 </head>
 <body>
     <h1>Hello welcome to SE lab.</h1>

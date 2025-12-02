@@ -1,0 +1,192 @@
+docker commands
+
+docker pull
+docker run --name <name> -d <image>
+docker ps 
+docker exec -it <name> <redis-cli-command line tool>
+
+redis docker file
+
+FROM redis:latest
+CMD ["redis-server"]
+
+docker build -t redisnew .
+docker commit <containerid> <username>/<newimagename>
+
+dockerfile for nginx
+
+FROM nginx:alpine
+
+docker compose nginx
+
+services:
+  web:
+    image: nginx
+    ports:
+      - "8060:80"
+  db:
+    image: tomee
+    ports:
+      - "8050:8080"
+
+
+docker compose wordpress-sql
+
+version: '3.8'  # Docker Compose file format version
+
+services:
+  wordpress:  # WordPress service
+    image: wordpress:latest
+    ports:
+      - "8080:80"  # Map port 80 of the container to port 8080 of the host
+    environment:
+      WORDPRESS_DB_HOST: db:3306  # Database host
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - db  # Ensures the db service starts first
+
+  db:  # MySQL service
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
+
+
+
+docker-compose up -d
+docker-compose down
+docker-compose up --scale <service_name>=2 -d
+
+custom network
+
+networks:
+  app-net:
+
+volumes:
+  db-data:
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    networks:
+      - app-net
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+
+flask app on docker
+
+
+from flask import Flask
+app = Flask(__name__)
+@app.route("/")
+def home():
+    return "Hello from Flask + Docker!"
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py /app/
+RUN pip install flask
+CMD ["python", "app.py"]
+
+
+pipeline {
+    agent any
+    tools{
+        jdk 'JAVA_HOME'
+        maven 'MAVEN_HOME'
+    }
+    stages {
+        stage('git repo & clean') {
+            steps {
+                bat "rmdir /s /q Harshitha_Jenkins_Maven || exit 0"
+                bat "git clone https://github.com/Harshitha-Macha/Harshitha_Jenkins_Maven.git"
+                bat "mvn clean -f Harshitha_Jenkins_Maven/pom.xml"
+            }
+        }
+        stage('install') {
+            steps {
+                bat "mvn install -f Harshitha_Jenkins_Maven/pom.xml" 
+            }
+        }
+        stage('test') {
+            steps {
+                bat "mvn test -f Harshitha_Jenkins_Maven/pom.xml"
+            }
+        }
+        stage('package') {
+            steps {
+                bat "mvn package -f Harshitha_Jenkins_Maven/pom.xml"
+            }
+        }
+    }
+}
+
+
+minikube
+
+kubectl create deployment mynginx --image=nginx
+kubectl set image deployment/myngnix nginx=nginx:latest
+
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+
+kubectl scale deployment mynginx --replicas=4
+
+kubectl port-forward svc/mynginx 8081:80
+
+
+nagios
+
+docker pull jasonrivers/nagios:latest
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+
+email
+
+
+ngrok config add-authtoken <your_token>
+
+ngrok http <jenkins-port>
+
+
+
+AWS
+
+dockerfile
+
+FROM nginx:latest
+COPY . /usr/share/nginx/html
+
+sudo docker build -t mywebapp
+sudo docker run -d -p 80:80 mywebapp
+
+for webapp
+
+FROM tomcat:9-jdk11
+COPY target/*.war /usr/local/tomcat/webapps
+sudo docker run -d -p 9090:8080 mavenwebproj
